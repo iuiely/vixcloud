@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+import os,sys,string,uvicorn
+BASE= os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE)
+from lib.license import *
+
+def help():
+  print("")
+  print("Usage: python3 vixlic [option]\n")
+  print("option: \n","  start , run daemon processes\n","  stop , stop vixlic process \n","  help , help information \n")
+
+if __name__ =='__main__':
+  pidfile = BASE+"/logs/vixlic.pid"
+  logfile = BASE+"/logs/vixlic.log"
+  sys.argv.pop(0)
+  argv = sys.argv
+  if len(argv) == 1 and argv[0]=='start':
+    start(pidfile,logfile,logfile)
+  elif len(argv) == 1 and argv[0]=='stop':
+    stop(pidfile)
+  else:
+    help()

@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+import os,sys,string
+BASE= os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE)
+from lib.setvnet import *
+
+#####################################################################
+def help():
+  print("")
+  print("Usage: python3 vixvnet-agent [option]\n")
+  print("option: \n","  start , run vixvnet agent daemon processes\n","  stop , stop vixvnet agent process \n","  help , help information \n")
+#####################################################################
+if __name__ =='__main__':
+  sys.argv.pop(0)
+  argv = sys.argv
+  pidfile = BASE+"/logs/vnetagent.pid"
+  logfile = BASE+"/logs/vnetagent.log"
+  if len(argv) == 1 and argv[0] == 'start':
+    print(datetime.datetime.now().strftime('%Y-%m-%d-%H:%M:%S'))
+    start(pidfile,logfile,logfile)
+  elif len(argv) == 1 and argv[0] == 'stop':
+    print("help")
+    start(pidfile)
+  elif len(argv) == 1 and argv[0] == 'debug':
+    vnet_control()
+  else:
+    help()

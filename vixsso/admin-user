@@ -1,0 +1,4 @@
+export USERNAME=admin
+export PASSWORD=123456
+export DOMAIN_NAME=default
+export SSO_DB=mysql+pymysql://root:123456@192.168.100.55:3306/

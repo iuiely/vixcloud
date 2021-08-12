@@ -1,0 +1,55 @@
+#!/usr/bin/env python3
+
+from time import strftime,gmtime
+from datetime import datetime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String,DateTime,Index,UniqueConstraint,create_engine
+from sqlalchemy.orm import sessionmaker,relationship
+from sqlalchemy.dialects.mysql import INTEGER, LONGTEXT, SMALLINT, TINYINT
+from werkzeug.security import generate_password_hash, check_password_hash
+import os
+
+username=os.getenv("USERNAME")
+password=os.getenv("PASSWORD")
+domain_name=os.getenv("DOMAIN_NAME")
+db_url=os.getenv("SSO_DB")
+
+Base = declarative_base()
+
+engine = create_engine(db_url+'vixsso')
+
+class Groups(Base):
+    __tablename__ = 'groups'
+
+    id = Column(INTEGER(unsigned=True),primary_key=True,autoincrement=True)
+    groupname = Column(String(32),unique=True,nullable=False)
+    create_time = Column(DateTime)
+
+class Users(Base):
+    __tablename__ = 'users'
+
+    id = Column(INTEGER(unsigned=True),primary_key=True,autoincrement=True)
+    username = Column(String(40),unique=True,nullable=False)
+    password = Column(String(150),nullable=False)
+    priv = Column(TINYINT(unsigned=True),nullable=False)
+    create_time = Column(DateTime)
+
+class Permission(Base):
+    __tablename__ = 'permission'
+
+    id = Column(TINYINT(unsigned=True),primary_key=True,autoincrement=True)
+    priv = Column(String(32),unique=True,nullable=False)
+
+
+Base.metadata.create_all(engine)
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
+hash_password = generate_password_hash(password)
+newuser=Users(username=username,password=hash_password,priv='1',create_time=datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+administrator=Permission(priv='administrator')
+admin=Permission(priv='admin')
+common=Permission(priv='common')
+session.add_all([newuser,administrator,admin,common])
+session.commit()
+

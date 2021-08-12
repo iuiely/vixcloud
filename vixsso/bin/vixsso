@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+import os,sys,string,uvicorn
+BASE= os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE)
+from lib.vixsso import *
+
+def help():
+  print("")
+  print("Usage: python3 vixsso <cmd> [option]\n")
+  print("option: \n","  -l , run processes\n","  -d , daemon processes \n")
+  print("cmd: \n","  start , start vixsso process \n","  stop , stop vixsso process \n","  help , help information \n")
+  print("example: \n","  python3 vixsso start -d , start vixsso daemon processes \n")
+
+if __name__ =='__main__':
+  sys.argv.pop(0)
+  argv = sys.argv
+  if len(argv) == 2 and argv[0]=='start' and argv[1] == '-l':
+    uvicorn.run(app='lib.vixsso:app',host="0.0.0.0",port=4201,reload=True)
+  elif len(argv) == 2 and argv[0]=='start' and argv[1] == '-d':
+    pidfile = BASE+'/logs/vixsso.pid'
+    conf = BASE+'/conf/gunicorn.py'
+    if not os.path.isfile(pidfile):
+      cmd = "/usr/local/bin/gunicorn -c "+conf+" lib.vixsso:app"
+      result = os.system(cmd)
+      if result == 0:
+        print("Start vixsso process ...")
+        sys.exit(result)
+      else:
+        print("Start vixsso error ...")
+        sys.exit(result)
+    else:
+      with open(pidfile,"r") as f:
+        _pid = f.read().strip("\n")
+        if not os.path.exists("/proc/"+_pid):
+          os.remove(pidfile)
+          cmd = "/usr/local/bin/gunicorn -c "+conf+" lib.vixsso:app"
+          result = os.system(cmd)
+          if result == 0:
+            print("Start vixsso process ...")
+            sys.exit(result)
+          else:
+            print("Start vixsso error ...")
+            sys.exit(result)
+        else:
+          print("The vixsso is running")
+          sys.exit(0)
+  elif len(argv) == 1 and argv[0] == 'stop':
+    pidfile = BASE+'/logs/vixsso.pid'
+    if os.path.isfile(pidfile):
+      with open(pidfile,"r") as f:
+        _pid = f.read().strip("\n")
+        cmd = "/usr/bin/kill -s QUIT "+_pid
+        result = os.system(cmd)
+        if result == 0:
+          print("Stop vixsso process ...")  
+          sys.exit(result)
+        else:
+          print("Stop vixsso error")
+          sys.exit(result)
+    else:
+      print("The vixsso is not running")
+      sys.exit(111)
+  else:
+    help()
