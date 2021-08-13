@@ -1,7 +1,8 @@
 # <p align="center">Vix-Cloud</p>
   Vix-Cloud Platform 是一个开源的基础私有云平台软件。  
   支持简单的虚拟机、虚拟网络、计算节点、系统镜像等统计功能  
-  支持创建资源区域、虚拟网络、系统镜像、虚拟机等功能
+  支持创建资源区域、虚拟网络、系统镜像、虚拟机等功能  
+  演示视频地址： https://www.bilibili.com/video/BV1so4y1U7xL
 ## 环境要求
   redis > 5.0.10  
   mysql > 8.0.20  
