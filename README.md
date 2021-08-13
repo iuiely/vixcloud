@@ -205,6 +205,8 @@ url = {
 ```
   cd /{dir}/vixcloud/vixportal  
   pm2 start portal  
+  
+  访问端口：4210
 ```
   2. nginx或apache启动  
   略  
