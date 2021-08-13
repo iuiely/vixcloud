@@ -35,6 +35,10 @@ pip3 install -r requirement.txt
 npm install -g express --registry=https://registry.npm.taobao.org  
 npm install -g compression --registry=https://registry.npm.taobao.org  
 npm install -g chalk --registry=https://registry.npm.taobao.org  
+切换到vixportal目录
+npm link  express
+npm link compression
+npm link chalk
 ```
 ##### 7、配置libvirt（libvirt必须启动）
   略
